@@ -1,0 +1,34 @@
+@tailwind base;
+
+@tailwind components;
+@tailwind utilities;
+
+/* styles.css */
+.scrollbar-dark::-webkit-scrollbar {
+  height: 10px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: transparent; /* You can change this to your desired color */
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  border-radius: 6px;
+}
+.scrollbar-dark:hover::-webkit-scrollbar-thumb {
+  background-color: #d6d6d6; /* You can change this to your desired color */
+}
+
+/* :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
