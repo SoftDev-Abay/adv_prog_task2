@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.svg";
-const Navbar = () => {
+const Navbar = ({ setIsOpenAddBuildingModal }) => {
   return (
     <div
       className="px-7 min-[500px]:px-20  w-full border-b-[2px] 
@@ -13,13 +13,23 @@ const Navbar = () => {
       <div className=" mx-auto flex  justify-between items-center">
         <div className="flex items-center gap-1">
           <img src={logo} width={50} height={50} />
-          <span className="text-2xl text-red font-semibold">airbnb</span>
+          <span className="text-2xl text-custom_red font-semibold">airbnb</span>
         </div>
         {/* Find your perfect vacation rental. */}
-        <button
-          className=" 
+        <div className="flex items-center gap-5">
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              setIsOpenAddBuildingModal(true);
+            }}
+          >
+            Add new home
+          </div>
+
+          <button
+            className=" 
             font-medium
-          bg-red
+          bg-custom_red
           text-white
           px-5
           py-3
@@ -30,9 +40,10 @@ const Navbar = () => {
           ease-in-out
 
           "
-        >
-          Sign up
-        </button>
+          >
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );

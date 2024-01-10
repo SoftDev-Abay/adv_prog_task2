@@ -12,7 +12,6 @@ const Rooms = () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(responce.data);
     setRooms(responce.data);
   };
 
