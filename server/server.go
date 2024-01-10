@@ -1,95 +1,55 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-	"renting/classes"
-	db "renting/database"
-)
+// import (
+// 	"encoding/json"
+// 	"fmt"
+// 	"log"
+// 	"net/http"
+// 	"renting/classes"
+// 	db "renting/database"
+// )
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
-// func registerHandler(w http.ResponseWriter, r *http.Request) {
-
-// 	if r.URL.Path != "/form" {
-// 		http.Error(w, "404 not found.", http.StatusNotFound)
-// 		return
-// 	}
-
-// 	if r.Method != "POST" {
-// 		http.Error(w, "Method is not supported.", http.StatusNotFound)
-// 		return
-// 	}
-
-// 	if err := r.ParseForm(); err != nil {
-// 		fmt.Fprintf(w, "ParseForm() err: %v", err)
-// 		return
-// 	}
-// 	fmt.Fprintf(w, "POST request successful")
-// 	name := r.FormValue("name")
-// 	address := r.FormValue("address")
-
-// 	fmt.Fprintf(w, "Name = %s\n", name)
-// 	fmt.Fprintf(w, "Address = %s\n", address)
+// func enableCors(w *http.ResponseWriter) {
+// 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 // }
 
-type user struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
+// // func registerHandler(w http.ResponseWriter, r *http.Request) {
 
-type loginResoponce struct {
-	Status string       `json:"status"`
-	User   classes.User `json:"user"`
-}
+// // 	if r.URL.Path != "/form" {
+// // 		http.Error(w, "404 not found.", http.StatusNotFound)
+// // 		return
+// // 	}
 
-func loginReciever(w http.ResponseWriter, r *http.Request) {
+// // 	if r.Method != "POST" {
+// // 		http.Error(w, "Method is not supported.", http.StatusNotFound)
+// // 		return
+// // 	}
 
-	if r.URL.Path != "/login" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
+// // 	if err := r.ParseForm(); err != nil {
+// // 		fmt.Fprintf(w, "ParseForm() err: %v", err)
+// // 		return
+// // 	}
+// // 	fmt.Fprintf(w, "POST request successful")
+// // 	name := r.FormValue("name")
+// // 	address := r.FormValue("address")
 
-	if r.Method != "POST" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
+// // 	fmt.Fprintf(w, "Name = %s\n", name)
+// // 	fmt.Fprintf(w, "Address = %s\n", address)
+// // }
 
-	decoder := json.NewDecoder(r.Body)
+// type user struct {
+// 	Username string `json:"username"`
+// 	Password string `json:"password"`
+// }
 
-	var u user
-	err := decoder.Decode(&u)
+// type loginResoponce struct {
+// 	Status string       `json:"status"`
+// 	User   classes.User `json:"user"`
+// }
 
-	lR := loginResoponce{"", classes.User{}}
+// func loginReciever(w http.ResponseWriter, r *http.Request) {
 
-	if err != nil || u.Username == "" || u.Password == "" {
-		lR.Status = "400"
-		log.Println(err)
-	} else {
-		lR.User, err = db.LoginUser(u.Username, u.Password)
-		if err != nil {
-			lR.Status = "400"
-			log.Println(err)
-		}
-
-		lR.Status = "success"
-
-		log.Println(lR)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(lR)
-
-}
-
-// func registerReciever(w http.ResponseWriter, r *http.Request) {
-
-// 	if r.URL.Path != "/register" {
+// 	if r.URL.Path != "/login" {
 // 		http.Error(w, "404 not found.", http.StatusNotFound)
 // 		return
 // 	}
@@ -104,58 +64,97 @@ func loginReciever(w http.ResponseWriter, r *http.Request) {
 // 	var u user
 // 	err := decoder.Decode(&u)
 
+// 	lR := loginResoponce{"", classes.User{}}
+
 // 	if err != nil || u.Username == "" || u.Password == "" {
+// 		lR.Status = "400"
 // 		log.Println(err)
 // 	} else {
-// 		err = db.Register(u.Username, u.Password, u.Email, u.PhoneNum)
+// 		lR.User, err = db.LoginUser(u.Username, u.Password)
 // 		if err != nil {
+// 			lR.Status = "400"
 // 			log.Println(err)
 // 		}
+
+// 		lR.Status = "success"
+
+// 		log.Println(lR)
 // 	}
 
 // 	w.Header().Set("Content-Type", "application/json")
 // 	w.WriteHeader(http.StatusCreated)
-// 	json.NewEncoder(w).Encode(u)
+// 	json.NewEncoder(w).Encode(lR)
+
 // }
 
-func BuildingsReciever(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
+// // func registerReciever(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/buildings" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
+// // 	if r.URL.Path != "/register" {
+// // 		http.Error(w, "404 not found.", http.StatusNotFound)
+// // 		return
+// // 	}
 
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
+// // 	if r.Method != "POST" {
+// // 		http.Error(w, "Method is not supported.", http.StatusNotFound)
+// // 		return
+// // 	}
 
-	buildings, err := db.GetBuildings()
+// // 	decoder := json.NewDecoder(r.Body)
 
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "500", http.StatusInternalServerError)
-		return
-	}
+// // 	var u user
+// // 	err := decoder.Decode(&u)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(buildings)
-}
+// // 	if err != nil || u.Username == "" || u.Password == "" {
+// // 		log.Println(err)
+// // 	} else {
+// // 		err = db.Register(u.Username, u.Password, u.Email, u.PhoneNum)
+// // 		if err != nil {
+// // 			log.Println(err)
+// // 		}
+// // 	}
 
-func main() {
+// // 	w.Header().Set("Content-Type", "application/json")
+// // 	w.WriteHeader(http.StatusCreated)
+// // 	json.NewEncoder(w).Encode(u)
+// // }
 
-	fileServer := http.FileServer(http.Dir("./static")) // New code
-	http.Handle("/", fileServer)                        // New code
-	// http.HandleFunc("/form", registerHandler)
-	http.HandleFunc("/login", loginReciever)
-	http.HandleFunc("/buildings", BuildingsReciever)
+// func BuildingsReciever(w http.ResponseWriter, r *http.Request) {
+// 	enableCors(&w)
 
-	fmt.Printf("Starting live reloaded server at port 8080\n")
+// 	if r.URL.Path != "/buildings" {
+// 		http.Error(w, "404 not found.", http.StatusNotFound)
+// 		return
+// 	}
 
-	if err := http.ListenAndServe(":3001", nil); err != nil {
-		log.Fatal(err)
-	}
+// 	if r.Method != "GET" {
+// 		http.Error(w, "Method is not supported.", http.StatusNotFound)
+// 		return
+// 	}
 
-}
+// 	buildings, err := db.GetBuildings()
+
+// 	if err != nil {
+// 		log.Println(err)
+// 		http.Error(w, "500", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusCreated)
+// 	json.NewEncoder(w).Encode(buildings)
+// }
+
+// func main() {
+
+// 	fileServer := http.FileServer(http.Dir("./static")) // New code
+// 	http.Handle("/", fileServer)                        // New code
+// 	http.HandleFunc("/login", loginReciever)
+// 	http.HandleFunc("/buildings", BuildingsReciever)
+
+// 	fmt.Printf("Starting live reloaded server at port 3000\n")
+
+// 	if err := http.ListenAndServe(":3000", nil); err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// }

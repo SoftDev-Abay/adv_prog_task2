@@ -1,4 +1,4 @@
-package classes
+package models
 
 type Building struct {
 	Id             int    `json:"id"`

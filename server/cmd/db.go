@@ -1,4 +1,4 @@
-package db
+package main
 
 import (
 	"database/sql"
@@ -8,8 +8,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	HOST     = "localhost"
+	PORT     = 5432
+	USER     = "postgres"
+	PASSWORD = "031216551248"
+	DBNAME   = "db_renting"
+)
+
 var (
-	db     *sql.DB
+	DB     *sql.DB
 	once   sync.Once
 	dbOnce sync.Once
 )
@@ -22,21 +30,21 @@ func getDB() *sql.DB {
 
 		dbOnce.Do(func() {
 			var err error
-			db, err = sql.Open("postgres", psqlInfo)
+			DB, err = sql.Open("postgres", psqlInfo)
 			if err != nil {
 				panic(err)
 			}
 
-			err = db.Ping()
+			err = DB.Ping()
 			if err != nil {
 				panic(err)
 			}
 		})
 	})
 
-	return db
+	return DB
 }
 
-func GetDBInstance() *sql.DB {
+func (app *application) GetDBInstance() *sql.DB {
 	return getDB()
 }
