@@ -153,8 +153,8 @@ package main
 
 // 	fmt.Printf("Starting live reloaded server at port 3000\n")
 
-// 	if err := http.ListenAndServe(":3000", nil); err != nil {
-// 		log.Fatal(err)
-// 	}
+	// if err := http.ListenAndServe(":3001", nil); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 // }
