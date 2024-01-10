@@ -1,6 +1,13 @@
 import countries from "../../assets/countries.json";
 
-const FormComponentLocation = () => {
+const FormComponentLocation = ({
+  country,
+  setCountry,
+  address,
+  setAddress,
+  city,
+  setCity,
+}) => {
   return (
     <div className="">
       <h1 className="leading-relaxed text-xl font-semibold dark:text-gray-400">
@@ -13,9 +20,14 @@ const FormComponentLocation = () => {
         <select
           type="text"
           className="border-solid border border-gray-200 rounded-md w-full px-5 py-3.5 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-gray-300 "
+          defaultValue={countries[0]}
+          value={country}
+          onChange={(e) => {
+            setCountry(e.target.value);
+          }}
         >
-          {countries.map((country) => {
-            return <option value={country}>{country}</option>;
+          {countries.map((countryName) => {
+            return <option value={countryName}>{countryName}</option>;
           })}
         </select>
 
@@ -23,11 +35,19 @@ const FormComponentLocation = () => {
           type="text"
           className="border-solid border border-gray-200 rounded-md w-full px-5 py-3.5 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-gray-300 "
           placeholder="City"
+          value={city}
+          onChange={(e) => {
+            setCity(e.target.value);
+          }}
         />
         <input
           type="text"
           className="border-solid border border-gray-200 rounded-md w-full px-5 py-3.5 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-gray-300 "
           placeholder="Address"
+          value={address}
+          onChange={(e) => {
+            setAddress(e.target.value);
+          }}
         />
       </div>
     </div>

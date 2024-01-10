@@ -1,10 +1,13 @@
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { useState } from "react";
-const FormComponentNumbers = () => {
-  const [guests, setGuests] = useState(0);
-  const [rooms, setRooms] = useState(0);
-  const [bathrooms, setBathrooms] = useState(0);
-
+const FormComponentNumbers = ({
+  guests,
+  setGuests,
+  rooms,
+  setRooms,
+  bathrooms,
+  setBathrooms,
+}) => {
   return (
     <div>
       <h1 className="leading-relaxed text-xl font-semibold dark:text-gray-400">

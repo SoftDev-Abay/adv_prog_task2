@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-const FormComponentImage = () => {
-  const [imageUrl, setImageUrl] = useState("");
+const FormComponentImage = ({ imageUrl, setImageUrl }) => {
   return (
     <div className="">
       <h1 className="leading-relaxed text-xl font-semibold dark:text-gray-400">
@@ -21,7 +20,7 @@ const FormComponentImage = () => {
       </div>
       <div
         className="
-        mt-6 min-h-[200px] flex justify-center items-center border-solid border border-gray-200 rounded-md w-full px-5 py-3.5 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-gray-300
+        mt-6 min-h-[300px] flex justify-center items-center border-solid border border-gray-200 rounded-md w-full px-5 py-3.5 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-gray-300
         "
       >
         {imageUrl.length > 0 ? (

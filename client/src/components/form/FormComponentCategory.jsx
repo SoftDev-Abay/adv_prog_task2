@@ -1,6 +1,6 @@
 import { categories } from "../Categories";
 
-const FormComponentCategory = () => {
+const FormComponentCategory = ({ category, setCategory }) => {
   return (
     <div>
       <h1 className="leading-relaxed text-xl font-semibold dark:text-gray-400">
@@ -16,6 +16,9 @@ const FormComponentCategory = () => {
             <div
               tabIndex={-1}
               className="px-5 py-4 flex border-solid border-gray-200 border rounded-md text-gray-600 focus:border-transparent focus:ring-4 focus:ring-gray-300 hover:bg-gray-50 hover:text-black   cursor-pointer"
+              onClick={() => {
+                setCategory(label);
+              }}
             >
               <div className=" flex flex-col   gap-1 font-semibold cursor-pointer ">
                 <Icon className="text-4xl " />

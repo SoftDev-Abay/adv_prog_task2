@@ -4,17 +4,78 @@ import FormComponentImage from "../components/form/FormComponentImage";
 import FormComponentCategory from "../components/form/FormComponentCategory";
 import FormComponentNumbers from "../components/form/FormComponentNumbers";
 import FormComponentLocation from "../components/form/FormComponentLocation";
-
-const FormComponents = [
-  FormComponentDescription,
-  FormComponentImage,
-  FormComponentCategory,
-  FormComponentNumbers,
-  FormComponentLocation,
-];
+import axios from "axios";
 
 const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
   const [formComponentIndex, setFormComponentIndex] = useState(0);
+  const [imageUrl, setImageUrl] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [roomsNum, setRoomsNum] = useState(0);
+  const [bathroomsNum, setBathroomsNum] = useState(0);
+  const [guestsNum, setGuestsNum] = useState(0);
+  const [coutry, setCoutry] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+
+  const FormComponents = [
+    <FormComponentDescription
+      description={description}
+      setDescription={setDescription}
+      title={title}
+      setTitle={setTitle}
+    />,
+    <FormComponentImage imageUrl={imageUrl} setImageUrl={setImageUrl} />,
+    <FormComponentCategory category={category} setCategory={setCategory} />,
+    <FormComponentNumbers
+      guests={guestsNum}
+      setGuests={setGuestsNum}
+      rooms={roomsNum}
+      setRooms={setRoomsNum}
+      bathrooms={bathroomsNum}
+      setBathrooms={setBathroomsNum}
+    />,
+    <FormComponentLocation
+      country={coutry}
+      setCountry={setCoutry}
+      address={address}
+      setAddress={setAddress}
+      city={city}
+      setCity={setCity}
+    />,
+  ];
+
+  const sendForm = () => {
+    const formData = {
+      imageUrl,
+      category,
+      description,
+      title,
+      roomsNum,
+      bathroomsNum,
+      guestsNum,
+      coutry,
+      address,
+      city,
+    };
+
+    console.log(formData);
+  };
+
+  const checkIfFormIsValid = () => {
+    if (formComponentIndex === 0) {
+      return title.length > 0 && description.length > 0;
+    } else if (formComponentIndex === 1) {
+      return imageUrl.length > 0;
+    } else if (formComponentIndex === 2) {
+      return category.length > 0;
+    } else if (formComponentIndex === 3) {
+      return guestsNum > 0 && roomsNum > 0 && bathroomsNum > 0;
+    } else if (formComponentIndex === 4) {
+      return coutry.length > 0 && address.length > 0 && city.length > 0;
+    }
+  };
 
   return (
     <>
@@ -68,7 +129,7 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
                       formComponentIndex === index ? "" : "hidden"
                     }`}
                   >
-                    <FormComponent />
+                    {FormComponent}
                   </div>
                 );
               })}
@@ -95,6 +156,10 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
                   data-modal-hide="default-modal"
                   type="button"
                   className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                  onClick={() => {
+                    checkIfFormIsValid() && sendForm();
+                    setIsOpenAddBuildingModal(false);
+                  }}
                 >
                   Add home
                 </button>
@@ -104,7 +169,8 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
                   type="button"
                   className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                   onClick={() => {
-                    setFormComponentIndex(formComponentIndex + 1);
+                    checkIfFormIsValid() &&
+                      setFormComponentIndex(formComponentIndex + 1);
                   }}
                 >
                   Next
