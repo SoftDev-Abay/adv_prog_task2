@@ -154,8 +154,11 @@ func main() {
 
 	fmt.Printf("Starting live reloaded server at port 8080\n")
 
-	if err := http.ListenAndServe(":3001", nil); err != nil {
+	// if err := http.ListenAndServe(":3001", nil); err != nil {
+	// 	log.Fatal(err)
+	// }  // with gin
+	if err := http.ListenAndServe(":3000", nil); err != nil {
 		log.Fatal(err)
-	}
+	} // without gin
 
 }
