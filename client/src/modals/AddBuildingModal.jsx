@@ -47,7 +47,8 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
   ];
 
   const sendForm = () => {
-    const formData = {
+
+    const payload = {
       imageUrl,
       category,
       description,
@@ -59,8 +60,26 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
       address,
       city,
     };
+    console.log(payload);
 
-    console.log(formData);
+    const send = async () => {
+      try {
+        const response = await axios.post("http://localhost:3000/add/building", payload, {
+          method : "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        console.log(response.data);
+      } catch (error) {
+        // Handle the error here
+        console.error('There was an error!', error);
+      }
+    };
+  
+    send();
   };
 
   const checkIfFormIsValid = () => {
