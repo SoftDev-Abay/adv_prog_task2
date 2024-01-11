@@ -12,7 +12,7 @@ const (
 	HOST     = "localhost"
 	PORT     = 5432
 	USER     = "postgres"
-	PASSWORD = "031216551248"
+	PASSWORD = "postgres"
 	DBNAME   = "db_renting"
 )
 
@@ -46,5 +46,6 @@ func getDB() *sql.DB {
 }
 
 func (app *application) GetDBInstance() *sql.DB {
+	fmt.Println("connected to DB")
 	return getDB()
 }

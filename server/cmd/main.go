@@ -8,7 +8,7 @@ import (
 	"renting/internal/repository/dbrepo"
 )
 
-const port = 8080
+const port = 3000
 
 type application struct {
 	DB repository.DatabaseRepo
