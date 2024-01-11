@@ -128,6 +128,22 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	
+	building := models.Building{
+		Description:    requestPayload.Description,
+		Address:        requestPayload.Address,
+		Country:        requestPayload.Country,
+		GuestsNum:      4,
+		RoomsNum:       2,
+		BathroomsNum:   2,
+		PriceDay:       100,
+		AvalableFrom:   "2024-01-01",
+		AvalableUntill: "2024-01-10",
+		UserId:         1,
+		ImgUrl:         requestPayload.ImageUrl,
+		City:           "New York",
+		Category:       1,
+	}
+	id, err := app.DB.InsertBuilding(building)
+	fmt.Println(id, err)
 	fmt.Println(requestPayload)
 }

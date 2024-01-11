@@ -10,4 +10,5 @@ type DatabaseRepo interface {
 	GetBuildings() ([]models.Building, error)
 	Register(username, email, password, phoneNum string) error
 	LoginUser(username, password string) (models.User, error)
+	InsertBuilding(building models.Building) (int, error)
 }

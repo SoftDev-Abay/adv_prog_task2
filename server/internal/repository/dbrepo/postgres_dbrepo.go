@@ -101,7 +101,6 @@ func (m *PostgresDBRepo) GetBuildings() ([]models.Building, error) {
 			UserId:         userId,
 			ImgUrl:         imgUrl,
 			City:           city,
-			Category:       category,
 		}
 		buildingsArr = append(buildingsArr, building)
 	}
@@ -111,4 +110,53 @@ func (m *PostgresDBRepo) GetBuildings() ([]models.Building, error) {
 		return nil, err
 	}
 	return buildingsArr, nil
+}
+
+func (m *PostgresDBRepo) InsertBuilding(building models.Building) (int, error) {
+	db := m.DB
+	query := `
+        INSERT INTO buildings (
+            description,
+            address,
+            country,
+            category_id,
+            guests_num,
+            rooms_num,
+            bathrooms_num,
+            price_day,
+            avalable_from,
+            avalable_untill,
+            user_id,
+            imgurl,
+            city
+        )
+        VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+        )
+        RETURNING id;
+    `
+
+	var buildingID int
+	err := db.QueryRow(
+		query,
+		building.Description,
+		building.Address,
+		building.Country,
+		building.Category,
+		building.GuestsNum,
+		building.RoomsNum,
+		building.BathroomsNum,
+		building.PriceDay,
+		building.AvalableFrom,
+		building.AvalableUntill,
+		building.UserId,
+		building.ImgUrl,
+		building.City,
+	).Scan(&buildingID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return buildingID, nil
 }
