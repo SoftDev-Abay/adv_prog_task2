@@ -127,5 +127,7 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "500 not found.", http.StatusBadRequest)
 		return
 	}
+
+	
 	fmt.Println(requestPayload)
 }
