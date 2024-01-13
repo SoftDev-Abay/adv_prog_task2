@@ -120,10 +120,20 @@ func (app *application) LoginReciever(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		lR.User, err = app.DB.LoginUser(u.Email, u.Password)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-		} else {
+		if err == nil {
 			lR.Status = "success"
+		} else if err.Error() == "user not found" {
+			lR.Status = "user not found"
+			json.NewEncoder(w).Encode(lR)
+			http.Error(w, "user not found", http.StatusUnauthorized)
+			return
+		} else if err.Error() == "invalid password" {
+			lR.Status = "invalid password"
+			json.NewEncoder(w).Encode(lR)
+			http.Error(w, "invalid password", http.StatusUnauthorized)
+			return
+		} else if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -167,15 +177,17 @@ func (app *application) RegisterReciever(w http.ResponseWriter, r *http.Request)
 			fmt.Println("User is exist")
 			aR.Status = "User is exist"
 			json.NewEncoder(w).Encode(aR)
-			http.Error(w, "user is exist", http.StatusBadRequest)
+			// code 409 is conflict
+			http.Error(w, "User is exist", http.StatusConflict)
+
 			return
 		}
 
-		// err = app.DB.Register(u)
-		// if err != nil {
-		// 	http.Error(w, "db problem", http.StatusInternalServerError)
-		// 	return
-		// }
+		err = app.DB.Register(u)
+		if err != nil {
+			http.Error(w, "db problem", http.StatusInternalServerError)
+			return
+		}
 
 		aR.Status = "success"
 	}

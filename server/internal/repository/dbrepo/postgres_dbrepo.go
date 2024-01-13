@@ -65,6 +65,7 @@ func (m *PostgresDBRepo) LoginUser(email, password string) (models.User, error) 
 		return models.User{}, errors.New("invalid password")
 	}
 	user.Password = password
+	user.Email = email
 
 	return user, nil
 }

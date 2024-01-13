@@ -3,7 +3,6 @@ import ModelCard from "./ModelCard";
 import { useAuthContext } from "../contex/AuthContext";
 import axios from "axios";
 
-
 const LoginModal = ({ setIsOpenLoginModal }) => {
   const { storeAndSetUser } = useAuthContext();
   const [currentProcces, setCurrentProcces] = useState("login");
@@ -19,53 +18,110 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
   const signUppasswordInputRef = useRef();
   const signUpConfirmPasswordInputRef = useRef();
   const signUpUsernameInputRef = useRef();
+  const signUpPhoneInputRef = useRef();
 
   const onLogin = async () => {
-    const email = logInEmailInputRef.current.value;
-    const password = logInpasswordInputRef.current.value;
+    try {
+      const email = logInEmailInputRef.current.value;
+      const password = logInpasswordInputRef.current.value;
 
-    // after server is ready
+      // after server is ready
 
-    const res = await axios.post("http://localhost:3000/auth/login", {
-      email,
-      password,
-    });
-    console.log(res)
-    if (res.status === "success") {
-      storeAndSetUser(res.data.data.user);
-      closeModal();
-    } else {
-      alert("Wrong email or password");
+      const res = await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // console.log(res.data);
+
+      if (res.data.status == "success") {
+        storeAndSetUser(res.data.user);
+        closeModal();
+      } else {
+        alert("Wrong email or password");
+      }
+    } catch (error) {
+      console.log(error);
     }
-
-
-
-    storeAndSetUser({ email, password, username: "test" });
-    closeModal();
   };
 
   const onSignUp = async () => {
-    const email = signUpEmailInputRef.current.value;
-    const password = signUppasswordInputRef.current.value;
-    const confirmPassword = signUpConfirmPasswordInputRef.current.value;
-    const username = signUpUsernameInputRef.current.value;
-    const phone_num = "87719001989"
+    try {
+      const email = signUpEmailInputRef.current.value;
+      const password = signUppasswordInputRef.current.value;
+      const confirmPassword = signUpConfirmPasswordInputRef.current.value;
+      const username = signUpUsernameInputRef.current.value;
+      const phone_num = signUpPhoneInputRef.current.value;
 
-    // after server is ready
-    const res = await axios.post("http://localhost:3000/auth/signup", {
-      email,
-      password,
-      username,
-      phone_num,
-    });
-    console.log(res.statusText)
-    console.log(res.status)
-    if (res.status === "success") {
-      alert("Account created successfully");
-    } else {
-      alert("Wrong email or password");
+      if (
+        !validateSignUpData(
+          email,
+          password,
+          confirmPassword,
+          username,
+          phone_num
+        )
+      ) {
+        return;
+      }
+
+      // after server is ready
+      const res = await axios.post("http://localhost:3000/auth/signup", {
+        email,
+        password,
+        username,
+        phone_num,
+      });
+      // console.log(res.statusText);
+      // console.log(res.status);
+      // console.log(res.data);
+
+      if (res.status === 201) {
+        alert("Account created successfully");
+      } else {
+        alert("Wrong email or password");
+      }
+    } catch (error) {
+      console.log(error);
     }
-    alert("Account created successfully");
+  };
+
+  const validateSignUpData = (
+    email,
+    password,
+    confirmPassword,
+    username,
+    phone_num
+  ) => {
+    if (password !== confirmPassword) {
+      alert("Password and confirm password doesn't match");
+      return false;
+    }
+
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return false;
+    }
+
+    if (username.length < 4) {
+      alert("Username must be at least 4 characters long");
+      return false;
+    }
+
+    if (phone_num.length < 10) {
+      alert("Phone number must be at least 10 characters long");
+      return false;
+    }
+
+    return true;
   };
 
   const footerLoginElemenet = (
@@ -156,6 +212,12 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
                 className="custom-modal-input"
                 placeholder="Confirm Passowrd"
                 ref={signUpConfirmPasswordInputRef}
+              />
+              <input
+                type="text"
+                className="custom-modal-input"
+                placeholder="Phone Number"
+                ref={signUpPhoneInputRef}
               />
             </div>
           </div>
