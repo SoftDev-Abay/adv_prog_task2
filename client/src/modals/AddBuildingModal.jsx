@@ -47,7 +47,6 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
   ];
 
   const sendForm = () => {
-
     const payload = {
       imageUrl,
       category,
@@ -60,15 +59,17 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
       address,
       city,
     };
+
     console.log(payload);
+
     const requestOptions = {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-  }
-    fetch(`http://localhost:3000/add/building`, requestOptions)
+    };
+    fetch(`http://localhost:3000/add/building`, requestOptions);
   };
 
   const checkIfFormIsValid = () => {
@@ -165,7 +166,7 @@ const AddBuildingModal = ({ setIsOpenAddBuildingModal }) => {
                   type="button"
                   className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                   onClick={() => {
-                    checkIfFormIsValid() && sendForm();
+                    sendForm();
                     setIsOpenAddBuildingModal(false);
                   }}
                 >

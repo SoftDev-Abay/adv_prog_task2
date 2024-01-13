@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import countries from "../../assets/countries.json";
 
 const FormComponentLocation = ({
@@ -8,6 +9,12 @@ const FormComponentLocation = ({
   city,
   setCity,
 }) => {
+  useEffect(() => {
+    if (country == "") {
+      setCountry(countries[0]);
+    }
+  }, []);
+
   return (
     <div className="">
       <h1 className="leading-relaxed text-xl font-semibold dark:text-gray-400">
