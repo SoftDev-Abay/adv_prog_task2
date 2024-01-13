@@ -87,9 +87,8 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		City:           requestPayload.City,
 		Category:       1,
 	}
-	id, err := app.DB.InsertBuilding(building)
-	fmt.Println(id, err)
-	fmt.Println(requestPayload)
+	app.DB.InsertBuilding(building)
+
 }
 
 func (app *application) LoginReciever(w http.ResponseWriter, r *http.Request) {
@@ -117,18 +116,15 @@ func (app *application) LoginReciever(w http.ResponseWriter, r *http.Request) {
 	lR := AuthResoponce{"", models.User{}}
 
 	if err != nil || u.Email == "" || u.Password == "" {
-		lR.Status = "400"
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	} else {
 		lR.User, err = app.DB.LoginUser(u.Email, u.Password)
 		if err != nil {
-			lR.Status = "400"
-			log.Println(err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		} else {
+			lR.Status = "success"
 		}
-
-		lR.Status = "success"
-
-		log.Println(lR)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -156,15 +152,29 @@ func (app *application) RegisterReciever(w http.ResponseWriter, r *http.Request)
 	err := decoder.Decode(&u)
 
 	aR := AuthResoponce{"", u}
-	fmt.Println(u)
 	if err != nil || u.Email == "" || u.Password == "" {
 		aR.Status = "400"
-		log.Println(err)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	} else {
+		exist, err := app.DB.UserExistsWithEmail(u.Email)
+		if err != nil {
+			http.Error(w, "db problem", http.StatusInternalServerError)
+			return
+		}
+
+		if exist {
+			fmt.Println("User is exist")
+			aR.Status = "User is exist"
+			json.NewEncoder(w).Encode(aR)
+			http.Error(w, "user is exist", http.StatusBadRequest)
+			return
+		}
+
 		// err = app.DB.Register(u)
 		// if err != nil {
-		// 	aR.Status = "400"
-		// 	log.Println(err)
+		// 	http.Error(w, "db problem", http.StatusInternalServerError)
+		// 	return
 		// }
 
 		aR.Status = "success"

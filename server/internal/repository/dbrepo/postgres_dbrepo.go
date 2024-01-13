@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"renting/models"
 
 	"golang.org/x/crypto/bcrypt"
@@ -33,25 +34,36 @@ func (m *PostgresDBRepo) Register(u models.User) error {
 	return nil
 }
 
+func (m *PostgresDBRepo) UserExistsWithEmail(email string) (bool, error) {
+	dbInstance := m.DB
+
+	var count int
+	err := dbInstance.QueryRow("SELECT COUNT(*) FROM users WHERE email = $1", email).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
 func (m *PostgresDBRepo) LoginUser(email, password string) (models.User, error) {
 	var user models.User
 	var hashedPassword string
 	dbInstance := m.DB
 
-	// query the database for the hashed password and admin flag based on the username
-	err := dbInstance.QueryRow("SELECT user_id, password, email, phone_num FROM users WHERE username = $1", email).Scan(&user.UserID, &hashedPassword, &user.Email, &user.PhoneNum)
+	err := dbInstance.QueryRow("SELECT id, password, username, phone_num FROM users WHERE email = $1", email).Scan(&user.UserID, &hashedPassword, &user.Username, &user.PhoneNum)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			fmt.Println("User not found")
 			return models.User{}, errors.New("user not found")
 		}
+		fmt.Printf("Error while querying database: %v\n", err)
 		return models.User{}, err
 	}
-
-	// compare the hashed password from the database with the one the user provided.
 	if err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password)); err != nil {
+		fmt.Println("Invalid password")
 		return models.User{}, errors.New("invalid password")
 	}
-
 	user.Password = password
 
 	return user, nil

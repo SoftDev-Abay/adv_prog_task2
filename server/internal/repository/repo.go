@@ -11,4 +11,5 @@ type DatabaseRepo interface {
 	Register(models.User) error
 	LoginUser(username, password string) (models.User, error)
 	InsertBuilding(building models.Building) (int, error)
+	UserExistsWithEmail(email string) (bool, error)
 }

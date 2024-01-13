@@ -8,7 +8,7 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
   const { storeAndSetUser } = useAuthContext();
   const [currentProcces, setCurrentProcces] = useState("login");
 
-  const closeModal = () => {something
+  const closeModal = () => {
     setIsOpenLoginModal(false);
   };
 
@@ -30,15 +30,15 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
       email,
       password,
     });
+    console.log(res)
+    if (res.status === "success") {
+      storeAndSetUser(res.data.data.user);
+      closeModal();
+    } else {
+      alert("Wrong email or password");
+    }
 
-    // if (res.status === "success") {
-    //   storeAndSetUser(res.data.data.user);
-    //   closeModal();
-    // } else {
-    //   alert("Wrong email or password");
-    // }
 
-    // testing
 
     storeAndSetUser({ email, password, username: "test" });
     closeModal();
@@ -58,7 +58,7 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
       username,
       phone_num,
     });
-    console.log("something")
+    console.log(res.statusText)
     console.log(res.status)
     if (res.status === "success") {
       alert("Account created successfully");
