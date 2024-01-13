@@ -3,7 +3,7 @@ package dbrepo
 import (
 	"database/sql"
 	"errors"
-	"renting/internal/models"
+	"renting/models"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,16 +16,16 @@ func (m *PostgresDBRepo) Connection() *sql.DB {
 	return m.DB
 }
 
-func (m *PostgresDBRepo) Register(username, email, password, phoneNum string) error {
+func (m *PostgresDBRepo) Register(u models.User) error {
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 
 	db := m.DB
 	_, err = db.Exec("INSERT INTO users (username, password, email, phone_num) VALUES ($1, $2, $3, $4)",
-		username, string(hashedPassword), email, phoneNum)
+		u.Username, string(hashedPassword), u.Email, u.PhoneNum)
 	if err != nil {
 		return err
 	}
@@ -33,13 +33,13 @@ func (m *PostgresDBRepo) Register(username, email, password, phoneNum string) er
 	return nil
 }
 
-func (m *PostgresDBRepo) LoginUser(username, password string) (models.User, error) {
+func (m *PostgresDBRepo) LoginUser(email, password string) (models.User, error) {
 	var user models.User
 	var hashedPassword string
 	dbInstance := m.DB
 
 	// query the database for the hashed password and admin flag based on the username
-	err := dbInstance.QueryRow("SELECT user_id, password, email, phone_num FROM users WHERE username = $1", username).Scan(&user.UserID, &hashedPassword, &user.Email, &user.PhoneNum)
+	err := dbInstance.QueryRow("SELECT user_id, password, email, phone_num FROM users WHERE username = $1", email).Scan(&user.UserID, &hashedPassword, &user.Email, &user.PhoneNum)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, errors.New("user not found")
@@ -52,7 +52,6 @@ func (m *PostgresDBRepo) LoginUser(username, password string) (models.User, erro
 		return models.User{}, errors.New("invalid password")
 	}
 
-	user.Username = username
 	user.Password = password
 
 	return user, nil

@@ -1,11 +1,14 @@
 import { React, useState, useRef } from "react";
 import ModelCard from "./ModelCard";
 import { useAuthContext } from "../contex/AuthContext";
+import axios from "axios";
+
+
 const LoginModal = ({ setIsOpenLoginModal }) => {
   const { storeAndSetUser } = useAuthContext();
   const [currentProcces, setCurrentProcces] = useState("login");
 
-  const closeModal = () => {
+  const closeModal = () => {something
     setIsOpenLoginModal(false);
   };
 
@@ -23,10 +26,11 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
 
     // after server is ready
 
-    // const res = await axios.post("/auth/login", {
-    //   email,
-    //   password,
-    // });
+    const res = await axios.post("http://localhost:3000/auth/login", {
+      email,
+      password,
+    });
+
     // if (res.status === "success") {
     //   storeAndSetUser(res.data.data.user);
     //   closeModal();
@@ -45,18 +49,22 @@ const LoginModal = ({ setIsOpenLoginModal }) => {
     const password = signUppasswordInputRef.current.value;
     const confirmPassword = signUpConfirmPasswordInputRef.current.value;
     const username = signUpUsernameInputRef.current.value;
+    const phone_num = "87719001989"
 
     // after server is ready
-    // const res = await axios.post("/auth/signup", {
-    //   email,
-    //   password,
-    //   username,
-    // });
-    // if (res.status === "success") {
-    //   alert("Account created successfully");
-    // } else {
-    //   alert("Wrong email or password");
-    // }
+    const res = await axios.post("http://localhost:3000/auth/signup", {
+      email,
+      password,
+      username,
+      phone_num,
+    });
+    console.log("something")
+    console.log(res.status)
+    if (res.status === "success") {
+      alert("Account created successfully");
+    } else {
+      alert("Wrong email or password");
+    }
     alert("Account created successfully");
   };
 

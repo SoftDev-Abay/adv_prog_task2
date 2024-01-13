@@ -8,7 +8,8 @@ func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/add/building", app.BuildingRegister)
-	mux.HandleFunc("/login", app.LoginReciever)
+	mux.HandleFunc("/auth/login", app.LoginReciever)
+	mux.HandleFunc("/auth/signup", app.RegisterReciever)
 	mux.HandleFunc("/buildings", app.BuildingsReciever)
 
 	return AllowOptionsMiddleware(mux)

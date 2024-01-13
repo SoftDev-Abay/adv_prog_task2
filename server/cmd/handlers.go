@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"renting/internal/models"
+	"renting/models"
 )
 
 func enableCors(w *http.ResponseWriter) {
@@ -39,62 +39,6 @@ func (app *application) BuildingsReciever(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(buildings)
-}
-
-func (app *application) LoginReciever(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
-	if r.URL.Path != "/login" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-
-	if r.Method != "POST" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-
-	decoder := json.NewDecoder(r.Body)
-
-	var u user
-	err := decoder.Decode(&u)
-
-	lR := loginResoponce{"", models.User{}}
-
-	if err != nil || u.Username == "" || u.Password == "" {
-		lR.Status = "400"
-		log.Println(err)
-	} else {
-		lR.User, err = app.DB.LoginUser(u.Username, u.Password)
-		if err != nil {
-			lR.Status = "400"
-			log.Println(err)
-		}
-
-		lR.Status = "success"
-
-		log.Println(lR)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(lR)
-
-}
-
-type user struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type loginResoponce struct {
-	Status string      `json:"status"`
-	User   models.User `json:"user"`
 }
 
 func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request) {
@@ -140,10 +84,97 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		AvalableUntill: "2024-01-10",
 		UserId:         1,
 		ImgUrl:         requestPayload.ImageUrl,
-		City:           "New York",
+		City:           requestPayload.City,
 		Category:       1,
 	}
 	id, err := app.DB.InsertBuilding(building)
 	fmt.Println(id, err)
 	fmt.Println(requestPayload)
+}
+
+func (app *application) LoginReciever(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	if r.URL.Path != "/auth/login" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+
+	if r.Method != "POST" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	var u models.User
+	err := decoder.Decode(&u)
+
+	lR := AuthResoponce{"", models.User{}}
+
+	if err != nil || u.Email == "" || u.Password == "" {
+		lR.Status = "400"
+		log.Println(err)
+	} else {
+		lR.User, err = app.DB.LoginUser(u.Email, u.Password)
+		if err != nil {
+			lR.Status = "400"
+			log.Println(err)
+		}
+
+		lR.Status = "success"
+
+		log.Println(lR)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(lR)
+
+}
+
+func (app *application) RegisterReciever(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	if r.URL.Path != "/auth/signup" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+
+	if r.Method != "POST" {
+		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	var u models.User
+	err := decoder.Decode(&u)
+
+	aR := AuthResoponce{"", u}
+	fmt.Println(u)
+	if err != nil || u.Email == "" || u.Password == "" {
+		aR.Status = "400"
+		log.Println(err)
+	} else {
+		// err = app.DB.Register(u)
+		// if err != nil {
+		// 	aR.Status = "400"
+		// 	log.Println(err)
+		// }
+
+		aR.Status = "success"
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(aR)
+}
+
+type AuthResoponce struct {
+	Status string      `json:"status"`
+	User   models.User `json:"user"`
 }
