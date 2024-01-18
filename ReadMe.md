@@ -8,8 +8,6 @@ This is a project that consists of a backend server written in Go and a front-en
 - [Project Structure](#project-structure)
 - [Running the Server](#running-the-server)
 - [Running the Client](#running-the-client)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Getting Started
 
@@ -28,4 +26,19 @@ The project is organized into two main directories: client and server.
 client: Contains the front-end code written in JavaScript/React.
 
 server: Contains the back-end server code written in Go.
+```
+
+## Running the Server
+To run the Go back-end server, use the following command:
+
+```shell
+make server
+```
+
+## Running the Client
+To run the front-end client application, use the following command:
+
+```
+make client
+
 ```
