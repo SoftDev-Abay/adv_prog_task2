@@ -92,7 +92,7 @@ func (m *PostgresDBRepo) GetCountBuildings() (int, error) {
 func (m *PostgresDBRepo) GetBuildingsInRange(start int, end int) ([]models.Building, error) {
 	db := m.DB
 	limit := end - start
-	rows, err := db.Query("select b.id, b.description, b.address, b.country, b.guests_num, b.rooms_num, b.bathrooms_num, b.price_day, b.avalable_from, b.avalable_untill, b.user_id, b.imgurl, b.city,  c.name as category from buildings b inner join categories c on c.id = b.category_id offset $1 limit $2", start, limit)
+	rows, err := db.Query("select b.id, b.description, b.address, b.country, b.guests_num, b.rooms_num, b.bathrooms_num, b.price_day, b.avalable_from, b.avalable_untill, b.user_id, b.imgurl, b.city,  c.name as category from buildings b inner join categories c on c.id = b.category_id order by b.id offset $1 limit $2", start, limit)
 	if err != nil {
 		return nil, err
 	}

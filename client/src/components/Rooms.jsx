@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCategoryContext } from "../contex/CategoryContex";
 import Pagination from "./Pagination";
 const Rooms = () => {
-  const limit = 7;
+  const limit = 4;
   const countVisiblePages = 5;
 
   const [rooms, setRooms] = useState([]);
@@ -26,6 +26,7 @@ const Rooms = () => {
       }
     );
     const { data } = responce;
+    console.log(data.buildings);
     setRooms(data.buildings);
     setCountBuildings(data.count);
   };
@@ -53,7 +54,7 @@ const Rooms = () => {
               room.category === currentCategory || currentCategory === "All"
           )
           .map((room) => {
-            return <RoomCard key={RoomCard + room.id} room={room} />;
+            return <RoomCard key={"RoomCard" + room.id} room={room} />;
           })}
       </div>
       <Pagination
