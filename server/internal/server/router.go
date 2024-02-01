@@ -15,6 +15,7 @@ func (s *Server) router() http.Handler {
 	router.HandleFunc("/auth/login", s.h.LoginReciever)
 	router.HandleFunc("/auth/signup", s.h.RegisterReciever)
 	router.HandleFunc("/buildings", s.h.BuildingsReciever).Methods("GET")
+	router.HandleFunc("/buildings/page", s.h.PaginatedBuildingsReciever).Methods("GET")
 	// mux.HandleFunc("/delete/building/{id}", app.DeleteBuilding).Methods("DELETE")
 
 	return router

@@ -8,8 +8,6 @@ import (
 	"renting/internal/server"
 )
 
-const port = 3000
-
 func main() {
 	log := slog.New(
 		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}),

@@ -7,7 +7,58 @@ import (
 	"net/http"
 	"renting/internal/service"
 	"renting/models"
+	"strconv"
 )
+
+func (h *Handlers) PaginatedBuildingsReciever(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+
+	if err != nil || page <= 0 {
+		log.Println(err)
+		http.Error(w, "400", http.StatusBadRequest)
+		return
+	}
+
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+
+	if err != nil || limit <= 0 {
+		log.Println(err)
+		http.Error(w, "400", http.StatusBadRequest)
+		return
+	}
+
+	start := (page - 1) * limit
+	end := start + limit
+
+	buildings, err := h.c.Store.GetBuildingsInRange(start, end)
+
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "500", http.StatusInternalServerError)
+		return
+	}
+
+	countBuildings, err := h.c.Store.GetCountBuildings()
+
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "500", http.StatusInternalServerError)
+		return
+	}
+
+	type PaginationResponce struct {
+		Buildings []models.Building `json:"buildings"`
+		Count     int               `json:"count"`
+	}
+
+	pr := PaginationResponce{buildings, countBuildings}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(pr)
+}
 
 func (h *Handlers) BuildingsReciever(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
