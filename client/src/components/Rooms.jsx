@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCategoryContext } from "../contex/CategoryContex";
 import Pagination from "./Pagination";
 const Rooms = () => {
-  const limit = 8;
+  const limit = 7;
   const countVisiblePages = 5;
 
   const [rooms, setRooms] = useState([]);
@@ -36,7 +36,7 @@ const Rooms = () => {
 
   useEffect(() => {
     const countPages = Math.ceil(countBuildings / limit);
-    if (countPages < countVisiblePages) {
+    if (countPages < countVisiblePages && countPages != 0) {
       setPagesRange({
         start: 1,
         end: countPages,

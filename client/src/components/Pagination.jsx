@@ -12,43 +12,49 @@ const Pagination = ({
   setPagesRange,
   getRooms,
 }) => {
-  const { start, end } = pagesRange;
   const countPages = Math.ceil(countBuildings / limit);
 
   const changePageHandlier = (newPage) => {
-    if (newPage == start && newPage != 1) decreaseVisiblePages();
-    else if (newPage == end && newPage != countPages) increaseVisiblePages();
     setActivePage(newPage);
     getRooms(newPage);
   };
   const increaseVisiblePages = () => {
-    let startPage = pagesRange.start + countVisiblePages;
-    let endPage = pagesRange.end + countVisiblePages;
+    let startPage = pagesRange.end + 1;
+    let endPage = startPage + countVisiblePages - 1;
 
     if (endPage > countPages) endPage = countPages;
 
-    setPagesRange([startPage, endPage]);
+    setPagesRange({ start: startPage, end: endPage });
+    setActivePage(startPage);
+    getRooms(startPage);
   };
 
   const decreaseVisiblePages = () => {
-    let startPage = pagesRange.start - countVisiblePages;
-    let endPage = pagesRange.end - countVisiblePages;
+    let endPage = pagesRange.start - 1;
+    let startPage = endPage - countVisiblePages + 1;
 
     if (startPage < 1) startPage = 1;
-    setPagesRange([startPage, endPage]);
+
+    setPagesRange({ start: startPage, end: endPage });
+
+    setActivePage(startPage);
+    getRooms(startPage);
   };
 
   const getPagesNumArr = () =>
-    Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    Array.from(
+      { length: pagesRange.end - pagesRange.start + 1 },
+      (_, i) => pagesRange.start + i
+    );
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="text-slate-500 cursor-pointer rounded-full flex justify-center items-center text-2xl w-12 h-12 bg-[$99C2FF]">
           <IoArrowBackSharp
             dis
             onClick={() => {
-              if (activePage > 1) changePageHandlier(activePage - 1);
+              if (pagesRange.start > 1) decreaseVisiblePages();
             }}
           />
         </div>
@@ -65,7 +71,7 @@ const Pagination = ({
         <div className="text-slate-500 cursor-pointer rounded-full flex justify-center items-center text-2xl  w-12 h-12 ">
           <IoArrowForwardSharp
             onClick={() => {
-              if (activePage < countPages) changePageHandlier(activePage + 1);
+              if (pagesRange.end < countPages) increaseVisiblePages();
             }}
           />
         </div>
