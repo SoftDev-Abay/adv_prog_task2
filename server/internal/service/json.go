@@ -1,4 +1,4 @@
-package main
+package service
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (app *application) readJson(w http.ResponseWriter, r *http.Request, data interface{}) error {
+func ReadJson(w http.ResponseWriter, r *http.Request, data interface{}) error {
 	maxBytes := 1024 * 1024
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 

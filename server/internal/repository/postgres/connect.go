@@ -1,4 +1,4 @@
-package main
+package postgres
 
 import (
 	"database/sql"
@@ -45,7 +45,7 @@ func getDB() *sql.DB {
 	return DB
 }
 
-func (app *application) GetDBInstance() *sql.DB {
+func GetDBInstance() *sql.DB {
 	fmt.Println("connected to DB")
 	return getDB()
 }

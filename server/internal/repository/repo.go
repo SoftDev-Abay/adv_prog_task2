@@ -5,7 +5,7 @@ import (
 	"renting/models"
 )
 
-type DatabaseRepo interface {
+type Store interface {
 	Connection() *sql.DB
 	GetBuildings() ([]models.Building, error)
 	Register(models.User) error

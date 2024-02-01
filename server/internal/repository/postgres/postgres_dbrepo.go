@@ -1,4 +1,4 @@
-package dbrepo
+package postgres
 
 import (
 	"database/sql"
@@ -11,6 +11,12 @@ import (
 
 type PostgresDBRepo struct {
 	DB *sql.DB
+}
+
+func NewPostgresDb(db *sql.DB) *PostgresDBRepo {
+	return &PostgresDBRepo{
+		DB: db,
+	}
 }
 
 func (m *PostgresDBRepo) Connection() *sql.DB {

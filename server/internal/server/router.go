@@ -1,20 +1,25 @@
-package main
+package server
 
 import (
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func (app *application) routes() http.Handler {
-	mux := http.NewServeMux()
+func (s *Server) router() http.Handler {
+	router := mux.NewRouter()
 
-	mux.HandleFunc("/add/building", app.BuildingRegister)
-	mux.HandleFunc("/auth/login", app.LoginReciever)
-	mux.HandleFunc("/auth/signup", app.RegisterReciever)
-	mux.HandleFunc("/buildings", app.BuildingsReciever)
+	router.Use(AllowOptionsMiddleware)
+
+	router.HandleFunc("/add/building", s.h.BuildingRegister)
+	router.HandleFunc("/auth/login", s.h.LoginReciever)
+	router.HandleFunc("/auth/signup", s.h.RegisterReciever)
+	router.HandleFunc("/buildings", s.h.BuildingsReciever).Methods("GET")
 	// mux.HandleFunc("/delete/building/{id}", app.DeleteBuilding).Methods("DELETE")
 
-	return AllowOptionsMiddleware(mux)
+	return router
 }
+
 func AllowOptionsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodOptions {
