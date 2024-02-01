@@ -1,18 +1,18 @@
 import React, { createContext, useContext, useState } from "react";
-import EditBuildingModal from "../modals/EditBuildingModal";
+import AddBuildingModal from "../modals/AddBuildingModal";
+
 const Context = createContext();
 
 const ModalsContext = ({ children }) => {
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-
+  const [isOpenAddBuildingModal, setIsOpenAddBuildingModal] = useState(false);
   return (
     <Context.Provider
       value={{
-        isOpenEditModal,
-        setIsOpenEditModal,
+        isOpenAddBuildingModal,
+        setIsOpenAddBuildingModal,
       }}
     >
-      {isOpenEditModal && <EditBuildingModal id={isOpenEditModal} setIsOpenEditModal = {setIsOpenEditModal}/>}
+      {isOpenAddBuildingModal && <AddBuildingModal />}
       {children}
     </Context.Provider>
   );

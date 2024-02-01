@@ -65,7 +65,6 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		Category    string `json:"category"`
 		Address     string `json:"address"`
 	}
-
 	err := app.readJson(w, r, &requestPayload)
 	if err != nil {
 		http.Error(w, "500 not found.", http.StatusBadRequest)
@@ -85,9 +84,10 @@ func (app *application) BuildingRegister(w http.ResponseWriter, r *http.Request)
 		UserId:         1,
 		ImgUrl:         requestPayload.ImageUrl,
 		City:           requestPayload.City,
-		Category:       1,
+		Category:       requestPayload.Category,
 	}
-	app.DB.InsertBuilding(building)
+	fmt.Println(building)
+	fmt.Println(app.DB.InsertBuilding(building))
 
 }
 
@@ -200,3 +200,36 @@ type AuthResoponce struct {
 	Status string      `json:"status"`
 	User   models.User `json:"user"`
 }
+
+// func (app *application) DeleteBuilding(w http.ResponseWriter, r *http.Request) {
+// 	enableCors(&w)
+
+// 	// Check for DELETE request method
+// 	if r.Method != "DELETE" {
+// 		http.Error(w, "Method is not supported.", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+
+// 	// Extract building ID from URL
+// 	vars := mux.Vars(r)
+// 	buildingID := vars["id"]
+// 	if buildingID == "" {
+// 		http.Error(w, "Building ID is required", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Call the database method to delete the building
+// 	err := app.DB.
+// 	if err != nil {
+// 		log.Println(err)
+// 		http.Error(w, "Error deleting building", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	// Respond with a success message
+// 	w.WriteHeader(http.StatusOK)
+// 	fmt.Fprintln(w, "Building deleted successfully")
+// }
+
+// // Add the route in your main function or wherever you set up your routes
+// // Assuming you are using gorilla/mux for routing

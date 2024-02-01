@@ -5,7 +5,7 @@ type Building struct {
 	Description    string `json:"description"`
 	Address        string `json:"address"`
 	Country        string `json:"country"`
-	Category       int    `json:"category"`
+	Category       string `json:"category"`
 	GuestsNum      int    `json:"guests_num"`
 	RoomsNum       int    `json:"rooms_num"`
 	BathroomsNum   int    `json:"bathrooms_num"`

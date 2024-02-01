@@ -11,6 +11,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/auth/login", app.LoginReciever)
 	mux.HandleFunc("/auth/signup", app.RegisterReciever)
 	mux.HandleFunc("/buildings", app.BuildingsReciever)
+	// mux.HandleFunc("/delete/building/{id}", app.DeleteBuilding).Methods("DELETE")
 
 	return AllowOptionsMiddleware(mux)
 }

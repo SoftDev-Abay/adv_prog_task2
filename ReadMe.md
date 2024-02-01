@@ -1,6 +1,6 @@
 # IdeaDB Renting Project
 
-This is a project that consists of a backend server written in Go and a front-end client application. The goal of this project is to create a platform for renting and managing ideas. Users can post their house, and sign in and sign up.
+This is a project that consists of a backend server written in Go and a front-end client application. The goal of this project is to create a platform for renting and creating new pages for renting. Users can post their house, and sign in and sign up.
 
 ## Table of Contents
 

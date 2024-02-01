@@ -113,6 +113,7 @@ func (m *PostgresDBRepo) GetBuildings() ([]models.Building, error) {
 			UserId:         userId,
 			ImgUrl:         imgUrl,
 			City:           city,
+			Category:       category,
 		}
 		buildingsArr = append(buildingsArr, building)
 	}
@@ -171,4 +172,66 @@ func (m *PostgresDBRepo) InsertBuilding(building models.Building) (int, error) {
 	}
 
 	return buildingID, nil
+}
+
+func (m *PostgresDBRepo) UpdateBuilding(building models.Building) error {
+	db := m.DB
+	query := `
+		UPDATE buildings
+		SET
+			description = $2,
+			address = $3,
+			country = $4,
+			category_id = $5,
+			guests_num = $6,
+			rooms_num = $7,
+			bathrooms_num = $8,
+			price_day = $9,
+			avalable_from = $10,
+			avalable_untill = $11,
+			user_id = $12,
+			imgurl = $13,
+			city = $14
+		WHERE id = $1;
+	`
+
+	_, err := db.Exec(query,
+		building.Id,
+		building.Description,
+		building.Address,
+		building.Country,
+		building.Category,
+		building.GuestsNum,
+		building.RoomsNum,
+		building.BathroomsNum,
+		building.PriceDay,
+		building.AvalableFrom,
+		building.AvalableUntill,
+		building.UserId,
+		building.ImgUrl,
+		building.City,
+	)
+
+	return err
+}
+
+func (m *PostgresDBRepo) DeleteBuilding(buildingID int) error {
+	db := m.DB
+	query := "DELETE FROM buildings WHERE id = $1"
+
+	result, err := db.Exec(query, buildingID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no building found with the given ID")
+	}
+
+	return nil
 }

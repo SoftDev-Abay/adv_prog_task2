@@ -1,10 +1,13 @@
 import React from "react";
-
+import { useModalContext } from "../contex/ModalsContext";
 const RoomCard = ({ room }) => {
   const { price_day, country, city, img_url, category } = room;
-
+  const {setIsOpenEditModal} = useModalContext()
+  // console.log(room)
   return (
-    <div className="cursor-pointer">
+    <div className="cursor-pointer" onClick={()=>{
+      setIsOpenEditModal(room.id)
+    }}>
       <img
         className="rounded-xl w-[250px] h-[250px]  min-[400px]:w-[200px] min-[400px]:h-[200px] "
         src={img_url}
