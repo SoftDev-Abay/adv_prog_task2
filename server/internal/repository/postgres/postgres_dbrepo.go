@@ -76,23 +76,38 @@ func (m *PostgresDBRepo) LoginUser(email, password string) (models.User, error) 
 	return user, nil
 }
 
-func (m *PostgresDBRepo) GetCountBuildings() (int, error) {
+func (m *PostgresDBRepo) GetCountBuildings(filters ...string) (int, error) {
 	db := m.DB
 	var count int
-	err := db.QueryRow("select count(*) from buildings").Scan(&count)
+	var err error
+
+	if len(filters) == 0 {
+		err = db.QueryRow("select count(*) from buildings").Scan(&count)
+	} else {
+		categoryFilter := filters[0]
+		err = db.QueryRow("select count(b.*) from buildings as b inner join categories c on c.id = b.category_id where c.name = $1;", categoryFilter).Scan(&count)
+	}
 
 	if err != nil {
 		return 0, err
 	}
 
 	return count, nil
-
 }
 
-func (m *PostgresDBRepo) GetBuildingsInRange(start int, end int) ([]models.Building, error) {
+func (m *PostgresDBRepo) GetBuildingsInRange(start int, end int, filters ...string) ([]models.Building, error) {
 	db := m.DB
 	limit := end - start
-	rows, err := db.Query("select b.id, b.description, b.address, b.country, b.guests_num, b.rooms_num, b.bathrooms_num, b.price_day, b.avalable_from, b.avalable_untill, b.user_id, b.imgurl, b.city,  c.name as category from buildings b inner join categories c on c.id = b.category_id order by b.id offset $1 limit $2", start, limit)
+	var err error
+	var rows *sql.Rows
+
+	if len(filters) == 0 {
+		rows, err = db.Query("select b.id, b.description, b.address, b.country, b.guests_num, b.rooms_num, b.bathrooms_num, b.price_day, b.avalable_from, b.avalable_untill, b.user_id, b.imgurl, b.city,  c.name as category from buildings b inner join categories c on c.id = b.category_id order by b.id offset $1 limit $2", start, limit)
+	} else {
+		categoryFilter := filters[0]
+		rows, err = db.Query("select b.id, b.description, b.address, b.country, b.guests_num, b.rooms_num, b.bathrooms_num, b.price_day, b.avalable_from, b.avalable_untill, b.user_id, b.imgurl, b.city,  c.name as category from buildings b inner join categories c on c.id = b.category_id where c.name = $1 order by b.id offset $2 limit $3", categoryFilter, start, limit)
+	}
+
 	if err != nil {
 		return nil, err
 	}

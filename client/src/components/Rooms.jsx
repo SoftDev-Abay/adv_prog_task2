@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCategoryContext } from "../contex/CategoryContex";
 import Pagination from "./Pagination";
 const Rooms = () => {
-  const limit = 4;
+  const limit = 10;
   const countVisiblePages = 5;
 
   const [rooms, setRooms] = useState([]);
@@ -18,7 +18,9 @@ const Rooms = () => {
 
   const getRooms = async (page = 1) => {
     const responce = await axios.get(
-      `http://localhost:3000/buildings/page?page=${page}&limit=${limit}`,
+      `http://localhost:3000/buildings/page?page=${page}&limit=${limit}&${
+        currentCategory != "All" && `category=${currentCategory}`
+      }`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -36,6 +38,10 @@ const Rooms = () => {
   }, []);
 
   useEffect(() => {
+    getRooms(1);
+  }, [currentCategory]);
+
+  useEffect(() => {
     const countPages = Math.ceil(countBuildings / limit);
     if (countPages < countVisiblePages && countPages != 0) {
       setPagesRange({
@@ -48,14 +54,9 @@ const Rooms = () => {
   return (
     <>
       <div className="mb-16 w-fit  mx-auto grid grid-cols-1 min-[400px]:grid-cols-2   sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-7 justify-items-center justify-center gap-7 mt-10">
-        {rooms
-          .filter(
-            (room) =>
-              room.category === currentCategory || currentCategory === "All"
-          )
-          .map((room) => {
-            return <RoomCard key={"RoomCard" + room.id} room={room} />;
-          })}
+        {rooms.map((room) => {
+          return <RoomCard key={"RoomCard" + room.id} room={room} />;
+        })}
       </div>
       <Pagination
         activePage={activePage}

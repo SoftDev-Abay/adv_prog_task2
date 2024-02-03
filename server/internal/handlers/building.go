@@ -29,10 +29,18 @@ func (h *Handlers) PaginatedBuildingsReciever(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	category := r.URL.Query().Get("category")
+
 	start := (page - 1) * limit
 	end := start + limit
 
-	buildings, err := h.c.Store.GetBuildingsInRange(start, end)
+	buildings := []models.Building{}
+
+	if category != "" { // if category is not empty
+		buildings, err = h.c.Store.GetBuildingsInRange(start, end, category)
+	} else {
+		buildings, err = h.c.Store.GetBuildingsInRange(start, end)
+	}
 
 	if err != nil {
 		log.Println(err)
@@ -40,7 +48,13 @@ func (h *Handlers) PaginatedBuildingsReciever(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	countBuildings, err := h.c.Store.GetCountBuildings()
+	countBuildings := 0
+	if category != "" { // if category is not empty
+		countBuildings, err = h.c.Store.GetCountBuildings(category)
+	} else {
+		countBuildings, err = h.c.Store.GetCountBuildings()
+
+	}
 
 	if err != nil {
 		log.Println(err)
