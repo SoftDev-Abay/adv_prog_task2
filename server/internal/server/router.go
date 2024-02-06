@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"renting/internal/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -10,6 +11,9 @@ func (s *Server) router() http.Handler {
 	router := mux.NewRouter()
 
 	router.Use(AllowOptionsMiddleware)
+
+	rateLimiter := middleware.RateLimiterMiddleware(5, 10)
+	router.Use(rateLimiter)
 
 	router.HandleFunc("/add/building", s.h.BuildingRegister)
 	router.HandleFunc("/auth/login", s.h.LoginReciever)
